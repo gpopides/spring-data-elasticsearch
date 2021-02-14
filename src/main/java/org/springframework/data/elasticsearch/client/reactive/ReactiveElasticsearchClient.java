@@ -15,9 +15,6 @@
  */
 package org.springframework.data.elasticsearch.client.reactive;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
 import java.net.ConnectException;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -51,6 +48,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.client.indices.GetIndexResponse;
 import org.elasticsearch.client.indices.GetIndexTemplatesRequest;
 import org.elasticsearch.client.indices.GetIndexTemplatesResponse;
 import org.elasticsearch.client.indices.IndexTemplatesExistRequest;
@@ -68,6 +66,9 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * A reactive client to connect to Elasticsearch.
@@ -1368,5 +1369,7 @@ public interface ReactiveElasticsearchClient {
 		 * @since 4.1
 		 */
 		Mono<Boolean> deleteTemplate(HttpHeaders headers, DeleteIndexTemplateRequest deleteIndexTemplateRequest);
+
+		Mono<GetIndexResponse> getIndex(HttpHeaders headers, org.elasticsearch.client.indices.GetIndexRequest getIndexRequest);
 	}
 }

@@ -423,6 +423,20 @@ class RequestFactory {
 		return request;
 	}
 
+	/**
+	 * creates a GetIndexRequest from the elasticsearch library, used by the reactive methods using an IndexCoordinates
+	 * parameter, which can hold multiple index names.
+	 *
+	 * @param coordinates coordinates
+	 * @return request
+	 */
+	public org.elasticsearch.action.admin.indices.get.GetIndexRequest getIndexRequestReactive(IndexCoordinates coordinates) {
+
+		org.elasticsearch.action.admin.indices.get.GetIndexRequest request = new org.elasticsearch.action.admin.indices.get.GetIndexRequest();
+		request.indices(coordinates.getIndexNames());
+		return request;
+	}
+
 	public IndicesExistsRequest indicesExistsRequest(IndexCoordinates index) {
 
 		String[] indexNames = index.getIndexNames();

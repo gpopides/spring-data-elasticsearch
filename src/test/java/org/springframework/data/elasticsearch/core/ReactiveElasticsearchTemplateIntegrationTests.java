@@ -20,14 +20,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.springframework.data.elasticsearch.annotations.FieldType.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
-
 import java.lang.Boolean;
 import java.lang.Long;
 import java.lang.Object;
@@ -45,6 +37,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.cluster.metadata.MappingMetadata;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.query.IdsQueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
@@ -70,10 +64,19 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.Score;
 import org.springframework.data.elasticsearch.client.reactive.ReactiveElasticsearchClient;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.mapping.IndexInformation;
 import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.data.elasticsearch.junit.jupiter.ReactiveElasticsearchRestTemplateConfiguration;
 import org.springframework.data.elasticsearch.junit.jupiter.SpringIntegrationTest;
 import org.springframework.util.StringUtils;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 /**
  * Integration tests for {@link ReactiveElasticsearchTemplate}.
@@ -1065,6 +1068,25 @@ public class ReactiveElasticsearchTemplateIntegrationTests {
 				.expectNext(true) //
 				.verifyComplete(); //
 	}
+
+
+	@Test // #1646
+	@DisplayName("should return info of all indices")
+	void shouldReturnInformationListOfAllIndices() {
+		template.indexOps(IndexCoordinates.of("*"))
+				.getInformation().as(StepVerifier::create)
+				.consumeNextWith(indexInformationList -> {
+					for (IndexInformation indexInformation : indexInformationList) {
+						assertThat(indexInformation.getName()).isInstanceOf(String.class);
+						assertThat(indexInformation.getMappings()).isInstanceOf(MappingMetadata.class);
+						assertThat(indexInformation.getSettings()).isInstanceOf(Settings.class);
+						assertThat(indexInformation.getAliases()).isInstanceOf(List.class);
+					}
+				})
+				.verifyComplete();
+	}
+
+
 	// endregion
 
 	// region Helper functions

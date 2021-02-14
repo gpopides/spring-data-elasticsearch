@@ -15,8 +15,7 @@
  */
 package org.springframework.data.elasticsearch.core;
 
-import reactor.core.publisher.Mono;
-
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,11 +28,15 @@ import org.springframework.data.elasticsearch.core.index.GetTemplateRequest;
 import org.springframework.data.elasticsearch.core.index.PutTemplateRequest;
 import org.springframework.data.elasticsearch.core.index.TemplateData;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.mapping.IndexInformation;
+
+import reactor.core.publisher.Mono;
 
 /**
  * Interface defining operations on indexes for the reactive stack.
  *
  * @author Peter-Josef Meisch
+ * @author George Popides
  * @since 4.1
  */
 public interface ReactiveIndexOperations {
@@ -283,6 +286,13 @@ public interface ReactiveIndexOperations {
 	 * @since 4.1
 	 */
 	IndexCoordinates getIndexCoordinates();
+
+	/**
+	 *
+	 * @return Mono of {@see IndexedObjectInformation}
+	 * @since 4.2
+	 */
+	Mono<List<IndexInformation>> getInformation();
 
 	// endregion
 }

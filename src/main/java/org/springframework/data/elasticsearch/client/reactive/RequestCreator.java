@@ -139,6 +139,8 @@ public interface RequestCreator {
 		return RequestConverters::count;
 	}
 
+	default Function<org.elasticsearch.client.indices.GetIndexRequest, Request> getIndex() { return RequestConverters::getIndex; }
+
 	/**
 	 * @since 4.1
 	 */
@@ -194,4 +196,5 @@ public interface RequestCreator {
 	default Function<DeleteIndexTemplateRequest, Request> deleteTemplate() {
 		return RequestConverters::deleteTemplate;
 	}
+
 }

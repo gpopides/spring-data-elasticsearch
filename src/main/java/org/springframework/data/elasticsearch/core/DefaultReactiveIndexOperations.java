@@ -18,8 +18,11 @@ package org.springframework.data.elasticsearch.core;
 import static org.elasticsearch.client.Requests.*;
 import static org.springframework.util.StringUtils.*;
 
+import org.springframework.data.elasticsearch.core.mapping.IndexInformation;
+import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -299,6 +302,14 @@ class DefaultReactiveIndexOperations implements ReactiveIndexOperations {
 	@Override
 	public IndexCoordinates getIndexCoordinates() {
 		return (boundClass != null) ? getIndexCoordinatesFor(boundClass) : boundIndex;
+	}
+
+	@Override
+	public Mono<List<IndexInformation>> getInformation() {
+		org.elasticsearch.client.indices.GetIndexRequest getIndexRequest = requestFactory.getIndexRequest(getIndexCoordinates());
+
+		return Mono.from(operations.executeWithIndicesClient(client -> client.getIndex(HttpHeaders.EMPTY, getIndexRequest)
+				.map(IndexInformation::createList)));
 	}
 
 	private IndexCoordinates getIndexCoordinatesFor(Class<?> clazz) {

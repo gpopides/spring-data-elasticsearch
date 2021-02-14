@@ -29,6 +29,7 @@ import org.springframework.data.elasticsearch.core.index.GetTemplateRequest;
 import org.springframework.data.elasticsearch.core.index.PutTemplateRequest;
 import org.springframework.data.elasticsearch.core.index.TemplateData;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.mapping.IndexInformation;
 import org.springframework.data.elasticsearch.core.query.AliasQuery;
 import org.springframework.lang.Nullable;
 
@@ -41,6 +42,7 @@ import org.springframework.lang.Nullable;
  * 
  * @author Peter-Josef Meisch
  * @author Sascha Woo
+ * @author George Popides
  * @since 4.0
  */
 public interface IndexOperations {
@@ -317,5 +319,6 @@ public interface IndexOperations {
 	 */
 	IndexCoordinates getIndexCoordinates();
 
+	List<IndexInformation> getInformation();
 	// endregion
 }
